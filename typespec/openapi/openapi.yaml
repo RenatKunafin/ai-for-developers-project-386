@@ -1,0 +1,552 @@
+openapi: 3.0.0
+info:
+  title: BookingApp API
+  version: 0.0.0
+tags: []
+paths:
+  /admin/bookings:
+    get:
+      operationId: Admin_listBookings
+      description: Получить список всех бронирований (всех типов событий).
+      parameters:
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - name: upcoming
+          in: query
+          required: false
+          schema:
+            type: boolean
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.Booking'
+  /admin/event-types:
+    get:
+      operationId: Admin_listEventTypes
+      description: Получить список всех типов событий владельца.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.EventType'
+    post:
+      operationId: Admin_createEventType
+      description: Создать новый тип события.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.EventType'
+        '400':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '404':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '409':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '500':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.EventTypeCreate'
+  /admin/event-types/{id}:
+    get:
+      operationId: Admin_getEventType
+      description: Получить тип события по ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.EventType'
+        '400':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '404':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '409':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '500':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+    put:
+      operationId: Admin_updateEventType
+      description: Обновить тип события.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.EventType'
+        '400':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '404':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '409':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '500':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.EventTypeCreate'
+    delete:
+      operationId: Admin_deleteEventType
+      description: Удалить тип события.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '400':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '404':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '409':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '500':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+  /admin/owner:
+    get:
+      operationId: Admin_getOwner
+      description: Получить профиль владельца календаря.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Owner'
+  /bookings:
+    post:
+      operationId: Public_createBooking
+      description: |-
+        Создать бронирование.
+        Ограничения:
+        - Слот должен быть в окне 14 дней от текущей даты.
+        - На одно и то же время нельзя создать две записи (даже разные типы событий).
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.Booking'
+        '400':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '404':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '409':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '500':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Models.BookingCreate'
+  /event-types:
+    get:
+      operationId: Public_listPublicEventTypes
+      description: Получить публичный список типов событий.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.EventTypePublic'
+  /event-types/{id}:
+    get:
+      operationId: Public_getPublicEventType
+      description: Получить публичную информацию о типе события.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.EventTypePublic'
+        '400':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '404':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '409':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '500':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+  /event-types/{id}/slots:
+    get:
+      operationId: Public_getAvailableSlots
+      description: |-
+        Получить доступные слоты для типа события.
+        Слоты формируются на 14 дней, начиная с текущей даты.
+        Недоступные (занятые) слоты могут отсутствовать в ответе или иметь available: false.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Models.Slot'
+        '400':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '404':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '409':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+        '500':
+          description: Ответ с ошибкой.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Models.ErrorResponse'
+components:
+  schemas:
+    Models.Booking:
+      type: object
+      required:
+        - id
+        - eventTypeId
+        - eventTypeName
+        - guestName
+        - startTime
+        - endTime
+        - status
+      properties:
+        id:
+          type: string
+        eventTypeId:
+          type: string
+        eventTypeName:
+          type: string
+        guestName:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/Models.BookingStatus'
+      description: Бронирование (встреча), созданное гостем.
+    Models.BookingCreate:
+      type: object
+      required:
+        - eventTypeId
+        - guestName
+        - startTime
+      properties:
+        eventTypeId:
+          type: string
+        guestName:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+      description: Запрос на создание бронирования от гостя.
+    Models.BookingStatus:
+      type: string
+      enum:
+        - confirmed
+      description: Статус бронирования.
+    Models.ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Models.ValidationError'
+      description: Ответ с ошибкой.
+    Models.EventType:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - durationMinutes
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+          format: int32
+      description: Тип события, создаваемый владельцем календаря.
+    Models.EventTypeCreate:
+      type: object
+      required:
+        - name
+        - description
+        - durationMinutes
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+          format: int32
+      description: Запрос на создание/обновление типа события.
+    Models.EventTypePublic:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - durationMinutes
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+          format: int32
+      description: Публичное представление типа события для гостя.
+    Models.Owner:
+      type: object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+      description: Владелец календаря. Один заранее заданный профиль.
+    Models.Slot:
+      type: object
+      required:
+        - startTime
+        - endTime
+        - available
+      properties:
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        available:
+          type: boolean
+      description: Свободный слот для бронирования.
+    Models.ValidationError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      description: Ошибка валидации.
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+    variables: {}
