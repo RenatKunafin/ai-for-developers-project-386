@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+  font-family: 'Press Start 2P', monospace;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.mantine-Button-root {
+  text-transform: none;
+  font-family: 'Press Start 2P', monospace;
+}
