@@ -1,0 +1,89 @@
+.guest-page-title {
+  color: var(--color-text-primary);
+  margin-bottom: 16px;
+}
+
+.guest-page-subtitle {
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+}
+
+.event-card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+.event-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.event-info {
+  flex: 1;
+}
+
+.event-name {
+  color: var(--color-text-primary);
+}
+
+.event-description {
+  color: var(--color-text-secondary);
+}
+
+.modal-header {
+  background-color: var(--color-card);
+}
+
+.modal-body {
+  background-color: var(--color-card);
+}
+
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.booking-form {
+  margin-top: 16px;
+}
+
+.booking-input {
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  padding: 8px;
+  width: 100%;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  border-radius: 0;
+  outline: none;
+}
+
+.booking-input:focus {
+  border-color: var(--color-accent);
+}
+
+.booking-textarea {
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  padding: 8px;
+  width: 100%;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  min-height: 60px;
+  border-radius: 0;
+  outline: none;
+  resize: vertical;
+}
+
+.booking-textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.success-message {
+  margin-top: 16px;
+  color: var(--color-accent);
+}

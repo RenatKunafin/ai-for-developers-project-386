@@ -1,0 +1,119 @@
+.admin-page-title {
+  color: var(--color-text-primary);
+  margin-bottom: 16px;
+}
+
+.admin-tabs {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+.admin-panel {
+  padding-top: 16px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.admin-count {
+  color: var(--color-text-secondary);
+}
+
+.event-card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+.event-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.event-name {
+  color: var(--color-text-primary);
+}
+
+.event-description {
+  color: var(--color-text-secondary);
+}
+
+.event-id {
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.booking-card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+.booking-name {
+  color: var(--color-text-primary);
+}
+
+.booking-guest {
+  color: var(--color-text-secondary);
+}
+
+.booking-time {
+  color: var(--color-text-muted);
+}
+
+.modal-header {
+  background-color: var(--color-card);
+}
+
+.modal-body {
+  background-color: var(--color-card);
+}
+
+.form-input {
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  padding: 8px;
+  width: 100%;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  border-radius: 0;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--color-accent);
+}
+
+/* Скрыть стрелки у number input */
+.form-input.no-spinners::-webkit-outer-spin-button,
+.form-input.no-spinners::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.form-input.no-spinners {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.form-textarea {
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  padding: 8px;
+  width: 100%;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  min-height: 60px;
+  border-radius: 0;
+  outline: none;
+  resize: vertical;
+}
+
+.form-textarea:focus {
+  border-color: var(--color-accent);
+}

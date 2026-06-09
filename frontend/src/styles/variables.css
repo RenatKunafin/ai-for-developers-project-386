@@ -1,0 +1,12 @@
+:root {
+  --color-bg: #1a1a1a;
+  --color-card: #2d2d2d;
+  --color-border: #3a3a3a;
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #9a9a9a;
+  --color-text-muted: #6a6a6a;
+  --color-accent: #4caf50;
+  --color-accent-hover: #43a047;
+  --color-surface: #2d2d2d;
+  --color-input-bg: #1a1a1a;
+}
