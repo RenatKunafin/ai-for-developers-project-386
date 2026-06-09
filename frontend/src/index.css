@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import './styles/variables.css';
 
 body {
-  background-color: #1a1a1a;
-  color: #e0e0e0;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
   font-family: 'Press Start 2P', monospace;
   margin: 0;
   padding: 0;

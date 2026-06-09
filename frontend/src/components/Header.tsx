@@ -1,17 +1,20 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Box, Button, Group } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
+import './Header.css';
 
 export function Header() {
+  const { t } = useTranslation();
   const location = useLocation();
   const isGuest = !location.pathname.startsWith('/admin');
 
   return (
-    <Box component='header' style={{ backgroundColor: '#2d2d2d', borderBottom: '1px solid #3a3a3a' }}>
-      <Group justify='space-between' p='md' style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <Box style={{ fontSize: '14px', color: '#4caf50' }}>
-          Запись на звонок
+    <Box component='header' className='header'>
+      <Group className='header-content' justify='space-between'>
+        <Box className='header-title'>
+          {t('common.appTitle')}
         </Box>
-        <Group gap='xs'>
+        <Group className='header-nav' gap='xs'>
           <Button
             component={Link}
             to='/'
@@ -19,7 +22,7 @@ export function Header() {
             color='green'
             size='xs'
           >
-            Запись
+            {t('common.booking')}
           </Button>
           <Button
             component={Link}
@@ -28,7 +31,7 @@ export function Header() {
             color='gray'
             size='xs'
           >
-            Admin
+            {t('common.admin')}
           </Button>
         </Group>
       </Group>

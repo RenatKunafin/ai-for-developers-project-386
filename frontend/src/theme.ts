@@ -33,6 +33,20 @@ export const theme = createTheme({
   headings: {
     fontFamily: 'Press Start 2P, monospace',
   },
+  other: {
+    colors: {
+      background: 'var(--color-bg)',
+      card: 'var(--color-card)',
+      border: 'var(--color-border)',
+      textPrimary: 'var(--color-text-primary)',
+      textSecondary: 'var(--color-text-secondary)',
+      textMuted: 'var(--color-text-muted)',
+      accent: 'var(--color-accent)',
+      accentHover: 'var(--color-accent-hover)',
+      surface: 'var(--color-surface)',
+      inputBg: 'var(--color-input-bg)',
+    },
+  },
   components: {
     Button: {
       defaultProps: {
@@ -52,3 +66,5 @@ export const theme = createTheme({
     },
   },
 });
+
+export const BOOKING_WINDOW_DAYS = 14;

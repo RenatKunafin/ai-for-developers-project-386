@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, Button, Text, Group, Box, Stack, Tabs, Badge, Modal } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { listEventTypes, listBookings, deleteEventType, createEventType } from '@/api/api';
 import { EventType } from '@/types';
 import dayjs from 'dayjs';
+import './AdminPage.css';
 
 export function AdminPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<string>('types');
-  const handleTabChange = (value: string | null) => setActiveTab(value || 'types');
+  const handleTabChange = useCallback((value: string | null) => setActiveTab(value || 'types'), []);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [newEventType, setNewEventType] = useState({ name: '', description: '', durationMinutes: 15 });
   const queryClient = useQueryClient();
@@ -22,62 +25,64 @@ export function AdminPage() {
     queryFn: listBookings,
   });
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     await deleteEventType(id);
     queryClient.invalidateQueries({ queryKey: ['adminEventTypes'] });
-  };
+  }, [queryClient]);
 
-  const handleCreate = async () => {
+  const handleCreate = useCallback(async () => {
     await createEventType(newEventType);
     setCreateModalOpen(false);
     setNewEventType({ name: '', description: '', durationMinutes: 15 });
     queryClient.invalidateQueries({ queryKey: ['adminEventTypes'] });
-  };
+  }, [newEventType, queryClient]);
 
   return (
     <Box>
-      <Text size='xl' mb='md' style={{ color: '#e0e0e0' }}>
-        Панель управления
+      <Text className='admin-page-title' size='xl' mb='md'>
+        {t('admin.pageTitle')}
       </Text>
 
       <Tabs value={activeTab} onChange={handleTabChange} color='green'>
-        <Tabs.List style={{ backgroundColor: '#2d2d2d', border: '1px solid #3a3a3a' }}>
-          <Tabs.Tab value='types'>Типы встреч</Tabs.Tab>
-          <Tabs.Tab value='bookings'>Предстоящие ({bookings?.length || 0})</Tabs.Tab>
+        <Tabs.List className='admin-tabs'>
+          <Tabs.Tab value='types'>{t('admin.typesTab')}</Tabs.Tab>
+          <Tabs.Tab value='bookings'>
+            {t('admin.bookingsTab')} {t('admin.bookingsCount', { count: bookings?.length || 0 })}
+          </Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value='types' pt='md'>
-          <Group justify='space-between' mb='md'>
-            <Text size='sm' style={{ color: '#9a9a9a' }}>
-              {eventTypes?.length || 0} типов
+        <Tabs.Panel value='types' className='admin-panel'>
+          <Group className='admin-header' justify='space-between'>
+            <Text className='admin-count' size='sm'>
+              {t('admin.typesCount', { count: eventTypes?.length || 0 })}
             </Text>
             <Button color='green' size='sm' onClick={() => setCreateModalOpen(true)}>
-              + Новый тип
+              {t('admin.newType')}
             </Button>
           </Group>
 
           <Stack gap='md'>
             {eventTypes?.map((event: EventType) => (
-              <Card key={event.id} padding='md' style={{ backgroundColor: '#2d2d2d', border: '1px solid #3a3a3a' }}>
-                <Group justify='space-between' align='start'>
+              <Card key={event.id} className='event-card' padding='md'>
+                <Group className='event-card-content' justify='space-between'>
                   <Box>
                     <Group gap='xs' mb='xs'>
-                      <Text size='sm' style={{ color: '#e0e0e0' }}>
+                      <Text className='event-name' size='sm'>
                         {event.name}
                       </Text>
                       <Badge color='green' size='sm'>
-                        {event.durationMinutes}m
+                        {event.durationMinutes}{t('common.minutesShort')}
                       </Badge>
                     </Group>
-                    <Text size='xs' style={{ color: '#9a9a9a' }}>
+                    <Text className='event-description' size='xs'>
                       {event.description}
                     </Text>
-                    <Text size='xs' style={{ color: '#6a6a6a', marginTop: '4px' }}>
+                    <Text className='event-id' size='xs'>
                       id: {event.id}
                     </Text>
                   </Box>
                   <Button color='gray' size='xs' onClick={() => handleDelete(event.id)}>
-                    Удалить
+                    {t('common.delete')}
                   </Button>
                 </Group>
               </Card>
@@ -85,19 +90,19 @@ export function AdminPage() {
           </Stack>
         </Tabs.Panel>
 
-        <Tabs.Panel value='bookings' pt='md'>
+        <Tabs.Panel value='bookings' className='admin-panel'>
           <Stack gap='md'>
             {bookings?.map((booking) => (
-              <Card key={booking.id} padding='md' style={{ backgroundColor: '#2d2d2d', border: '1px solid #3a3a3a' }}>
+              <Card key={booking.id} className='booking-card' padding='md'>
                 <Group justify='space-between' align='start'>
                   <Box>
-                    <Text size='sm' style={{ color: '#e0e0e0' }}>
+                    <Text className='booking-name' size='sm'>
                       {booking.eventTypeName}
                     </Text>
-                    <Text size='xs' style={{ color: '#9a9a9a' }}>
+                    <Text className='booking-guest' size='xs'>
                       {booking.guestName}
                     </Text>
-                    <Text size='xs' style={{ color: '#6a6a6a' }}>
+                    <Text className='booking-time' size='xs'>
                       {dayjs(booking.startTime).format('DD MMMM HH:mm')} - {dayjs(booking.endTime).format('HH:mm')}
                     </Text>
                   </Box>
@@ -112,61 +117,38 @@ export function AdminPage() {
       <Modal
         opened={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        title='Новый тип встречи'
+        title={t('admin.createType')}
         centered
-        styles={{
-          header: { backgroundColor: '#2d2d2d' },
-          body: { backgroundColor: '#2d2d2d' },
+        classNames={{
+          header: 'modal-header',
+          body: 'modal-body',
         }}
       >
         <Stack gap='sm'>
-          <Text size='xs'>Название:</Text>
+          <Text size='xs'>{t('admin.name')}</Text>
           <input
             type='text'
             value={newEventType.name}
             onChange={(e) => setNewEventType({ ...newEventType, name: e.target.value })}
-            style={{
-              backgroundColor: '#1a1a1a',
-              border: '1px solid #3a3a3a',
-              color: '#e0e0e0',
-              padding: '8px',
-              width: '100%',
-              fontFamily: 'Press Start 2P, monospace',
-              fontSize: '10px',
-            }}
+            className='form-input'
+            placeholder={t('admin.typeNamePlaceholder')}
           />
-          <Text size='xs'>Описание:</Text>
+          <Text size='xs'>{t('admin.description')}</Text>
           <textarea
             value={newEventType.description}
             onChange={(e) => setNewEventType({ ...newEventType, description: e.target.value })}
-            style={{
-              backgroundColor: '#1a1a1a',
-              border: '1px solid #3a3a3a',
-              color: '#e0e0e0',
-              padding: '8px',
-              width: '100%',
-              fontFamily: 'Press Start 2P, monospace',
-              fontSize: '10px',
-              minHeight: '60px',
-            }}
+            className='form-textarea'
+            placeholder={t('admin.typeDescriptionPlaceholder')}
           />
-          <Text size='xs'>Длительность (мин):</Text>
+          <Text size='xs'>{t('admin.duration')}</Text>
           <input
             type='number'
             value={newEventType.durationMinutes}
             onChange={(e) => setNewEventType({ ...newEventType, durationMinutes: parseInt(e.target.value) || 0 })}
-            style={{
-              backgroundColor: '#1a1a1a',
-              border: '1px solid #3a3a3a',
-              color: '#e0e0e0',
-              padding: '8px',
-              width: '100%',
-              fontFamily: 'Press Start 2P, monospace',
-              fontSize: '10px',
-            }}
+            className='form-input'
           />
           <Button color='green' onClick={handleCreate}>
-            Создать
+            {t('common.create')}
           </Button>
         </Stack>
       </Modal>

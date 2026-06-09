@@ -1,0 +1,44 @@
+{
+  "common": {
+    "appTitle": "Запись на звонок",
+    "booking": "Запись",
+    "admin": "Admin",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "create": "Создать",
+    "confirm": "Подтвердить",
+    "back": "Назад",
+    "close": "Закрыть",
+    "minutes": "мин",
+    "minutesShort": "м"
+  },
+  "guest": {
+    "pageTitle": "Выбор встречи",
+    "selectType": "Выберите тип для записи",
+    "bookButton": "Записаться",
+    "selectDate": "Выбор даты",
+    "selectTime": "Выбор времени",
+    "yourName": "Ваше имя:",
+    "confirmBooking": "Подтвердить запись",
+    "bookingSuccess": "Запись успешно создана!",
+    "duration": "{{minutes}} мин"
+  },
+  "admin": {
+    "pageTitle": "Панель управления",
+    "typesTab": "Типы встреч",
+    "bookingsTab": "Предстоящие",
+    "bookingsCount": "({{count}})",
+    "typesCount": "{{count}} типов",
+    "newType": "Новый тип",
+    "createType": "Новый тип встречи",
+    "name": "Название:",
+    "description": "Описание:",
+    "duration": "Длительность (мин):",
+    "typeNamePlaceholder": "Название типа встречи",
+    "typeDescriptionPlaceholder": "Описание типа встречи"
+  },
+  "validation": {
+    "required": "Обязательное поле"
+  }
+}

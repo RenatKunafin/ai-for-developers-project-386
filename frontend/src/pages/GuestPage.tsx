@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, Button, Text, Group, Box, Stack, Modal, Grid, Badge } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { listPublicEventTypes, getAvailableSlots, createBooking } from '@/api/api';
 import { EventTypePublic, Slot } from '@/types';
+import { BOOKING_WINDOW_DAYS } from '@/theme';
 import dayjs from 'dayjs';
+import './GuestPage.css';
 
 export function GuestPage() {
+  const { t } = useTranslation();
   const [selectedEvent, setSelectedEvent] = useState<EventTypePublic | null>(null);
   const [dateModalOpen, setDateModalOpen] = useState(false);
   const [timeModalOpen, setTimeModalOpen] = useState(false);
@@ -25,25 +29,25 @@ export function GuestPage() {
     enabled: !!selectedEvent && !!selectedDate,
   });
 
-  const handleSelectEvent = (event: EventTypePublic) => {
+  const handleSelectEvent = useCallback((event: EventTypePublic) => {
     setSelectedEvent(event);
     setDateModalOpen(true);
     setSelectedDate(null);
     setSelectedSlot(null);
     setBookingSuccess(false);
-  };
+  }, []);
 
-  const handleSelectDate = (date: Date) => {
+  const handleSelectDate = useCallback((date: Date) => {
     setSelectedDate(date);
     setDateModalOpen(false);
     setTimeModalOpen(true);
-  };
+  }, []);
 
-  const handleSelectSlot = (slot: Slot) => {
+  const handleSelectSlot = useCallback((slot: Slot) => {
     setSelectedSlot(slot);
-  };
+  }, []);
 
-  const handleBooking = async () => {
+  const handleBooking = useCallback(async () => {
     if (!selectedEvent || !selectedSlot || !guestName) return;
     await createBooking({
       eventTypeId: selectedEvent.id,
@@ -55,47 +59,47 @@ export function GuestPage() {
     setSelectedEvent(null);
     setSelectedSlot(null);
     setGuestName('');
-  };
+  }, [selectedEvent, selectedSlot, guestName]);
 
-  const generateCalendarDays = () => {
+  const generateCalendarDays = useCallback(() => {
     const today = new Date();
     const days = [];
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < BOOKING_WINDOW_DAYS; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
       days.push(date);
     }
     return days;
-  };
+  }, []);
 
   return (
     <Box>
-      <Text size='xl' mb='md' style={{ color: '#e0e0e0' }}>
-        Выбор встречи
+      <Text className='guest-page-title' size='xl' mb='md'>
+        {t('guest.pageTitle')}
       </Text>
-      <Text size='sm' mb='lg' style={{ color: '#9a9a9a' }}>
-        Выберите тип для записи
+      <Text className='guest-page-subtitle' size='sm' mb='lg'>
+        {t('guest.selectType')}
       </Text>
 
       <Stack gap='md'>
         {eventTypes?.map((event) => (
-          <Card key={event.id} padding='md' style={{ backgroundColor: '#2d2d2d', border: '1px solid #3a3a3a' }}>
-            <Group justify='space-between' align='start'>
-              <Box>
+          <Card key={event.id} className='event-card' padding='md'>
+            <Group className='event-card-content' justify='space-between'>
+              <Box className='event-info'>
                 <Group gap='xs' mb='xs'>
-                  <Text size='sm' style={{ color: '#e0e0e0' }}>
+                  <Text className='event-name' size='sm'>
                     {event.name}
                   </Text>
                   <Badge color='green' size='sm'>
-                    {event.durationMinutes} мин
+                    {t('guest.duration', { minutes: event.durationMinutes })}
                   </Badge>
                 </Group>
-                <Text size='xs' style={{ color: '#9a9a9a' }}>
+                <Text className='event-description' size='xs'>
                   {event.description}
                 </Text>
               </Box>
               <Button color='green' size='sm' onClick={() => handleSelectEvent(event)}>
-                Записаться
+                {t('guest.bookButton')}
               </Button>
             </Group>
           </Card>
@@ -106,15 +110,15 @@ export function GuestPage() {
       <Modal
         opened={dateModalOpen}
         onClose={() => setDateModalOpen(false)}
-        title='Выбор даты'
+        title={t('guest.selectDate')}
         centered
-        styles={{
-          header: { backgroundColor: '#2d2d2d' },
-          body: { backgroundColor: '#2d2d2d' },
+        classNames={{
+          header: 'modal-header',
+          body: 'modal-body',
         }}
       >
         <Text size='sm' mb='md'>
-          {selectedEvent?.name} · {selectedEvent?.durationMinutes} мин
+          {selectedEvent?.name} · {t('guest.duration', { minutes: selectedEvent?.durationMinutes })}
         </Text>
         <Grid>
           {generateCalendarDays().map((date) => (
@@ -137,62 +141,53 @@ export function GuestPage() {
       <Modal
         opened={timeModalOpen}
         onClose={() => setTimeModalOpen(false)}
-        title='Выбор времени'
+        title={t('guest.selectTime')}
         centered
-        styles={{
-          header: { backgroundColor: '#2d2d2d' },
-          body: { backgroundColor: '#2d2d2d' },
+        classNames={{
+          header: 'modal-header',
+          body: 'modal-body',
         }}
       >
         <Text size='sm' mb='md'>
-          {selectedEvent?.name} · {selectedEvent?.durationMinutes} мин
+          {selectedEvent?.name} · {t('guest.duration', { minutes: selectedEvent?.durationMinutes })}
         </Text>
         <Text size='xs' mb='md'>
           {selectedDate ? dayjs(selectedDate).format('DD MMMM, dddd') : ''}
         </Text>
-        <Grid>
+        <div className='time-grid'>
           {slots?.map((slot) => (
-            <Grid.Col key={slot.startTime} span={3}>
-              <Button
-                fullWidth
-                size='xs'
-                variant={selectedSlot?.startTime === slot.startTime ? 'filled' : 'default'}
-                color={slot.available ? 'green' : 'gray'}
-                disabled={!slot.available}
-                onClick={() => handleSelectSlot(slot)}
-              >
-                {dayjs(slot.startTime).format('HH:mm')}
-              </Button>
-            </Grid.Col>
+            <Button
+              key={slot.startTime}
+              fullWidth
+              size='xs'
+              variant={selectedSlot?.startTime === slot.startTime ? 'filled' : 'default'}
+              color={slot.available ? 'green' : 'gray'}
+              disabled={!slot.available}
+              onClick={() => handleSelectSlot(slot)}
+            >
+              {dayjs(slot.startTime).format('HH:mm')}
+            </Button>
           ))}
-        </Grid>
+        </div>
         {selectedSlot && (
-          <Box mt='md'>
-            <Text size='xs' mb='xs'>Ваше имя:</Text>
+          <Box className='booking-form'>
+            <Text size='xs' mb='xs'>{t('guest.yourName')}</Text>
             <input
               type='text'
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
-              style={{
-                backgroundColor: '#1a1a1a',
-                border: '1px solid #3a3a3a',
-                color: '#e0e0e0',
-                padding: '8px',
-                width: '100%',
-                fontFamily: 'Press Start 2P, monospace',
-                fontSize: '10px',
-              }}
+              className='booking-input'
             />
             <Button fullWidth mt='md' color='green' onClick={handleBooking}>
-              Подтвердить запись
+              {t('guest.confirmBooking')}
             </Button>
           </Box>
         )}
       </Modal>
 
       {bookingSuccess && (
-        <Text mt='md' color='green' size='sm'>
-          Запись успешно создана!
+        <Text className='success-message' size='sm'>
+          {t('guest.bookingSuccess')}
         </Text>
       )}
     </Box>

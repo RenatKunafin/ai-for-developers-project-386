@@ -1,12 +1,13 @@
 import { Box } from '@mantine/core';
 import { Header } from './Header';
 import { Outlet } from 'react-router-dom';
+import './Layout.css';
 
 export function Layout() {
   return (
-    <Box style={{ minHeight: '100vh', backgroundColor: '#1a1a1a' }}>
+    <Box className='layout'>
       <Header />
-      <Box style={{ maxWidth: 800, margin: '0 auto', padding: '24px' }}>
+      <Box className='layout-container'>
         <Outlet />
       </Box>
     </Box>
