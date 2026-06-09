@@ -146,11 +146,16 @@ export function AdminPage() {
             type='number'
             value={newEventType.durationMinutes}
             onChange={(e) => setNewEventType({ ...newEventType, durationMinutes: parseInt(e.target.value) || 0 })}
-            className='form-input'
+            className='form-input no-spinners'
           />
-          <Button color='green' onClick={handleCreate}>
-            {t('common.create')}
-          </Button>
+          <Group>
+            <Button color='green' onClick={handleCreate}>
+              {t('common.create')}
+            </Button>
+            <Button color='gray' onClick={() => setCreateModalOpen(false)}>
+              {t('common.cancel')}
+            </Button>
+          </Group>
         </Stack>
       </Modal>
     </Box>
