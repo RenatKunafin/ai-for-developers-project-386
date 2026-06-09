@@ -4,7 +4,7 @@ import { Card, Button, Text, Group, Box, Stack, Modal, Grid, Badge } from '@mant
 import { useTranslation } from 'react-i18next';
 import { listPublicEventTypes, getAvailableSlots, createBooking } from '@/api/api';
 import { EventTypePublic, Slot } from '@/types';
-import { BOOKING_WINDOW_DAYS } from '@/theme';
+import { BOOKING_WINDOW_DAYS, DATE_FORMAT_SHORT, DATE_FORMAT_FULL, TIME_FORMAT } from '@/constants';
 import dayjs from 'dayjs';
 import './GuestPage.css';
 
@@ -130,7 +130,7 @@ export function GuestPage() {
                 color='gray'
                 onClick={() => handleSelectDate(date)}
               >
-                {dayjs(date).format('DD.MM')}
+                {dayjs(date).format(DATE_FORMAT_SHORT)}
               </Button>
             </Grid.Col>
           ))}
@@ -152,7 +152,7 @@ export function GuestPage() {
           {selectedEvent?.name} · {t('guest.duration', { minutes: selectedEvent?.durationMinutes })}
         </Text>
         <Text size='xs' mb='md'>
-          {selectedDate ? dayjs(selectedDate).format('DD MMMM, dddd') : ''}
+          {selectedDate ? dayjs(selectedDate).format(DATE_FORMAT_FULL) : ''}
         </Text>
         <div className='time-grid'>
           {slots?.map((slot) => (
@@ -165,7 +165,7 @@ export function GuestPage() {
               disabled={!slot.available}
               onClick={() => handleSelectSlot(slot)}
             >
-              {dayjs(slot.startTime).format('HH:mm')}
+              {dayjs(slot.startTime).format(TIME_FORMAT)}
             </Button>
           ))}
         </div>

@@ -4,6 +4,7 @@ import { Card, Button, Text, Group, Box, Stack, Tabs, Badge, Modal } from '@mant
 import { useTranslation } from 'react-i18next';
 import { listEventTypes, listBookings, deleteEventType, createEventType } from '@/api/api';
 import { EventType } from '@/types';
+import { DATE_FORMAT_ADMIN, TIME_FORMAT } from '@/constants';
 import dayjs from 'dayjs';
 import './AdminPage.css';
 
@@ -103,7 +104,7 @@ export function AdminPage() {
                       {booking.guestName}
                     </Text>
                     <Text className='booking-time' size='xs'>
-                      {dayjs(booking.startTime).format('DD MMMM HH:mm')} - {dayjs(booking.endTime).format('HH:mm')}
+                      {dayjs(booking.startTime).format(DATE_FORMAT_ADMIN)} - {dayjs(booking.endTime).format(TIME_FORMAT)}
                     </Text>
                   </Box>
                 </Group>
