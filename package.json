@@ -9,11 +9,14 @@
     "react-i18next": "^17.0.8"
   },
   "workspaces": [
-    "frontend"
+    "frontend",
+    "backend"
   ],
   "scripts": {
     "dev": "npm run dev -w frontend",
+    "dev:backend": "npm run start:dev -w backend",
     "build": "npm run build -w frontend",
+    "build:backend": "npm run build -w backend",
     "lint": "npm run lint -w frontend"
   }
 }

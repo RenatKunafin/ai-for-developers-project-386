@@ -1,3 +1,4 @@
 .ai-doc
 .opencode
 node_modules
+.playwright-mcp
