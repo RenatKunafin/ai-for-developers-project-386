@@ -199,6 +199,14 @@ docker-compose -f docker-compose.prod.yml up --build
 - DTO: class-validator для валидации
 - Ошибки: стандартный NestJS HttpException (400, 404, 409, 500)
 
+### NestJS CLI
+
+- Для генерации артефактов бэкенда использовать **NestJS CLI** (`nest generate`)
+- Модуль: `nest generate module <name>`
+- Сервис: `nest generate service <name> --no-spec`
+- Контроллер: `nest generate controller <name>`
+- Применять CLI вместо ручного создания файлов для соблюдения стандартной структуры
+
 ### Паттерны
 
 - Модульная архитектура NestJS
